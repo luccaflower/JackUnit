@@ -1,21 +1,44 @@
 class Main {
     function void main() {
-        var String testAppend, testString, output; 
         var DynamicString test; 
+        var ReportWriter report;
+        var String testString, output, count;
+        var int i;
+        var char keyPress, currentPress;
         let test = DynamicString.new();
-        let testString = "Hello, world! ";
-        let testAppend = "And hello to you!";
-        do test.append(testString);
-        let output = test.string();
-        do Output.printString(output);
-        do Output.println();
-        do test.append(testAppend);
-        let output = test.string();
-        do Output.printString(output);
-        do Output.println();
-        let output = test.substring(5, 10);
-        do Output.printString(output);
-        do Output.println();
+        let testString = "Report ";
+        let i = 0;
+        while (i < 100) {
+            let count = String.new(4);
+            do count.setInt(i);
+            do test.append(count);
+            do test.appendChar(String.newLine());
+            do count.dispose();
+            let i = i + 1;
+        }
+        let report = ReportWriter.new(test);
+        do report.print();
+        let keyPress = 0;
+        while(~(currentPress = 128)) {
+            let currentPress = Keyboard.keyPressed();
+            if (~(currentPress = keyPress)) {
+                let keyPress = currentPress;
+                if (keyPress = 132) {
+                    do report.next();
+                    do report.print();
+                }
+                if (keyPress = 130) {
+                    do report.prev();
+                    do report.print();
+                }
+                if (keyPress = 32) {
+                    do report.print();
+                }
+                if (keyPress = 129) {
+                    do Screen.clearScreen();
+                }
+            }
+        }
         return;
     }
 }

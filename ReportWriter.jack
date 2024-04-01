@@ -1,0 +1,87 @@
+class ReportWriter {
+    field DynamicString text;
+    field int pageCount;
+    field Array pages;
+    field int cursor;
+
+    constructor ReportWriter new(DynamicString textArg) {
+        var int i, lineCount, length, localPageCount;
+        var char next;
+        var String string;
+        let text = textArg;
+        let lineCount = 0;
+        let pageCount = 0;
+        let cursor = 0;
+        let i = 0;
+        let string = textArg.string();
+        let length = string.length();
+        let localPageCount = 0;
+        while (i < length) {
+            let next = string.charAt(i);
+            if (next = String.newLine()) {
+                let lineCount = lineCount + 1;
+                if (lineCount = 22) {
+                    let localPageCount = localPageCount + 1;
+                    let lineCount = 0;
+                }
+            }
+            let i = i + 1;
+        }
+        let lineCount = 0;
+        let pageCount = localPageCount;
+        let pages = Array.new(pageCount);
+        let localPageCount = 0;
+        let i = 0;
+        while (i < length) {
+            let next = string.charAt(i);
+            if (next = String.newLine()) {
+                let lineCount = lineCount + 1;
+                if (lineCount = 22) {
+                    let pages[localPageCount] = i;
+                    let localPageCount = localPageCount + 1;
+                    let lineCount = 0;
+                }
+            }
+            let i = i + 1;
+        }
+        return this;
+    }
+    
+    method void print() {
+        var int start, end;
+        var String printText;
+        if (cursor = 0) {
+            let start = 0;
+        } else {
+            let start = pages[cursor - 1];
+        }
+        if (cursor = pageCount) {
+            let end = text.length();
+        } else {
+            let end = pages[cursor]+1;
+        }
+
+        do Screen.clearScreen();
+        let printText = text.substring(start, end);
+        do Output.moveCursor(0,0);
+        do Output.printString(printText);
+        do printText.dispose();
+        return;
+    }
+
+    method void next() {
+        if (cursor = pageCount) {
+            return;
+        }
+        let cursor = cursor + 1;
+        return;
+    }
+
+    method void prev() {
+        if (cursor = 0) {
+            return;
+        }
+        let cursor = cursor - 1;
+        return;
+    }
+}

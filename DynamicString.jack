@@ -24,6 +24,16 @@ class DynamicString {
         }
         return;
     }
+    
+    method void appendChar(char c) {
+        var int currentLength, newLength;
+        let currentLength = string.length();
+        if (currentMax < (currentLength + 1)) {
+            do inflate();
+        }
+        do string.appendChar(c);
+        return;
+    }
 
     method void inflate() {
         var int i, length;
@@ -44,30 +54,33 @@ class DynamicString {
     }
 
     method int length() {
-        var int length; 
-        let length = string.length();
-        return length;
+        return string.length();
     }
 
     method String string() {
         return string;
     }
 
-    //end inclusive. "string".subString(0, 1) will return "st"
     method String substring(int start, int end) {
-        var int length, i, nextIndex; 
+        var int i;
         var char next; 
         var String subString; 
-        let length = end - start + 1;
-        let subString = String.new(length);
+        if (start > end) {
+            return "";
+        }
+        let subString = String.new(end - start);
         let i = 0;
-        while (i < length) {
-            let nextIndex = start + i;
-            let next = string.charAt(nextIndex);
+        while (i < (end - start)) {
+            let next = string.charAt(start + i);
             do subString.appendChar(next);
             let i = i + 1;
         }
         return subString;
     }
 
+    method void dispose() {
+        do string.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
 }
