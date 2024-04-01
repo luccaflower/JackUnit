@@ -1,0 +1,73 @@
+class DynamicString {
+    field String string;
+    field int currentMax;
+
+    constructor DynamicString new() {
+        let currentMax = 16;
+        let string = String.new(16);
+        return this;
+    }
+
+    method void append(String app) {
+        var int appLength, currentLength, newLength, i; 
+        var char next;
+        let currentLength = string.length();
+        let appLength = app.length();
+        let newLength = currentLength + appLength;
+        while (newLength > currentMax) {
+            do inflate();
+        }
+        while (i < appLength) {
+            let next = app.charAt(i);
+            do string.appendChar(next);
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void inflate() {
+        var int i, length;
+        var char next;
+        var String newString;
+        let currentMax = currentMax * 2;
+        let newString = String.new(currentMax);
+        let i = 0;
+        let length = string.length();
+        while (i < length) {
+            let next = string.charAt(i);
+            do newString.appendChar(next);
+            let i = i + 1;
+        }
+        do string.dispose();
+        let string = newString;
+        return;
+    }
+
+    method int length() {
+        var int length; 
+        let length = string.length();
+        return length;
+    }
+
+    method String string() {
+        return string;
+    }
+
+    //end inclusive. "string".subString(0, 1) will return "st"
+    method String substring(int start, int end) {
+        var int length, i, nextIndex; 
+        var char next; 
+        var String subString; 
+        let length = end - start + 1;
+        let subString = String.new(length);
+        let i = 0;
+        while (i < length) {
+            let nextIndex = start + i;
+            let next = string.charAt(nextIndex);
+            do subString.appendChar(next);
+            let i = i + 1;
+        }
+        return subString;
+    }
+
+}
